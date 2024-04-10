@@ -1,0 +1,12 @@
+{
+  "name": "pruebas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "http.js",
+  "scripts": {
+    "dev": "node --watch http.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
