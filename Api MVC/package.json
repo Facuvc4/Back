@@ -1,0 +1,22 @@
+{
+  "name": "pruebas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.19.2",
+    "servor": "^4.0.2",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
+  }
+}
