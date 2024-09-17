@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Register</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        width: 300px;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      input[type='text'],
+      input[type='password'] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #218838;
+      }
+
+      .toggle {
+        text-align: center;
+        margin-top: 15px;
+        cursor: pointer;
+        color: #007bff;
+      }
+
+      .error-message {
+        color: red;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Login Form -->
+      <div id="loginForm">
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username" required />
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Password"
+          required
+        />
+        <button onclick="login()">Login</button>
+        <div id="loginText" class="error-message"></div>
+        <div class="toggle" onclick="showRegister()">
+          ¿No tienes cuenta? Regístrate
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerForm" style="display: none">
+        <h2>Registro</h2>
+        <input
+          type="text"
+          id="registerUsername"
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          id="registerPassword"
+          placeholder="Password"
+          required
+        />
+        <button onclick="register()">Registrar</button>
+        <div id="registerError" class="error-message"></div>
+        <div class="toggle" onclick="showLogin()">
+          ¿Ya tienes cuenta? Inicia sesión
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = 'http://localhost:3000';
+
+      // Muestra el formulario de registro
+      function showRegister() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+      }
+
+      // Muestra el formulario de login
+      function showLogin() {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+      }
+
+      // Función para manejar el login
+      async function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const loginText = document.getElementById('loginText');
+
+        loginText.textContent = ''; // Limpiar el mensaje de error
+
+        try {
+          const response = await fetch(`${API_URL}/user/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.status == 200) {
+            loginText.textContent = 'Sesion iniciada... Entrando...';
+            loginText.style.color = 'green';
+
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1000);
+          } else {
+            loginText.textContent = data.message || 'Error en el login';
+          }
+        } catch (error) {
+          loginText.textContent =
+            error.message || 'Error al conectar con el servidor';
+        }
+      }
+
+      // Función para manejar el registro
+      async function register() {
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+        const registerError = document.getElementById('registerError');
+
+        registerError.textContent = '';
+
+        try {
+          const response = await fetch(`${API_URL}/user/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert('Registro exitoso!');
+            showLogin(); // Cambiar al formulario de login
+          } else {
+            registerError.textContent = data.message || 'Error en el registro';
+          }
+        } catch (error) {
+          registerError.textContent = 'Error al conectar con el servidor';
+        }
+      }
+    </script>
+  </body>
+</html>
