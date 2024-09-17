@@ -6,7 +6,7 @@ const main = async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.password.length < 8) throw new Error('Password too short');
     const { username, password } = req.body;
     await RegisterService(username, password);
-    res.send('Registro completado con exito').status(200);
+    res.json({ message: 'User created' }).status(200);
   } catch (error) {
     next(error);
   }
